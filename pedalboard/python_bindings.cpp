@@ -62,9 +62,13 @@ namespace py = pybind11;
 #include "plugins/Reverb.h"
 
 #include "io/AudioFileInit.h"
-#include "io/AudioStream.h"
 #include "io/ReadableAudioFile.h"
 #include "io/WriteableAudioFile.h"
+
+// AudioStream is not yet supported on Linux (due to the ALSA dependency)
+#ifndef JUCE_LINUX
+#include "io/AudioStream.h"
+#endif
 
 using namespace Pedalboard;
 
@@ -197,5 +201,8 @@ PYBIND11_MODULE(pedalboard_native, m) {
   init_audio_file(io);
   init_readable_audio_file(io);
   init_writeable_audio_file(io);
+
+#ifndef JUCE_LINUX
   init_audio_stream(io);
+#endif
 };
